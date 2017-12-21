@@ -1,27 +1,56 @@
 parameters:
-    sfynx.browser.lib.browscap.class: Sfynx\BrowserBundle\Lib\Browscap
-    sfynx.browser.lib.mobiledetect.class: Sfynx\BrowserBundle\Lib\MobileDetect
+    sfynx.browser.handler.cache.class: Sfynx\BrowserBundle\EventListener\HandlerCache
+    sfynx.browser.handler.cache.params:
+      date_expire: '%sfynx.browser.cookies.date_expire%'
+      date_interval: '%sfynx.browser.cookies.date_interval%'
 
-services:  
-    #               
-    # libraries Configuration
+    sfynx.browser.browscap.lib.class: Sfynx\BrowserBundle\Manager\Lib\BrowscapHandler
+    sfynx.browser.browscap.factory.class: Sfynx\BrowserBundle\Manager\Factory\BrowscapFactory
+
+    sfynx.browser.mobiledetect.lib.class: Sfynx\BrowserBundle\Manager\Lib\MobileDetect
+    sfynx.browser.mobiledetect.factory.class:  Sfynx\BrowserBundle\Manager\Factory\MobileDetectFactory
+
+services:
     #
-    sfynx.browser.lib.browscap:
-        class: %sfynx.browser.lib.browscap.class%
-        arguments: [%sfynx.browser.browscap.cache_dir%]
+    # browscap Configuration
+    #
+    sfynx.browser.browscap.lib:
+        class: '%sfynx.browser.browscap.lib.class%'
+        arguments:
+            - '%sfynx.browser.browscap.cache_dir%'
         properties:
-             remoteIniUrl: %sfynx.browser.browscap.remote_ini_url%
-             remoteVerUrl: %sfynx.browser.browscap.remote_ver_url%
-             timeout: %sfynx.browser.browscap.timeout%
-             updateInterval: %sfynx.browser.browscap.update_interval%
-             errorInterval: %sfynx.browser.browscap.error_interval%
-             doAutoUpdate: %sfynx.browser.browscap.do_auto_update%
-             updateMethod: %sfynx.browser.browscap.update_method%
-             localFile: %sfynx.browser.browscap.local_file%
-             lowercase: %sfynx.browser.browscap.lowercase%
-             silent: %sfynx.browser.browscap.silent%
-             cacheFilename: %sfynx.browser.browscap.cache_filename%
-             iniFilename: %sfynx.browser.browscap.ini_filename%             
-        
-    sfynx.browser.lib.mobiledetect:
-        class: %sfynx.browser.lib.mobiledetect.class%
+             updateInterval: '%sfynx.browser.browscap.update_interval%'
+             errorInterval: '%sfynx.browser.browscap.error_interval%'
+             timeout: '%sfynx.browser.browscap.timeout%'
+             silent: '%sfynx.browser.browscap.silent%'
+
+    sfynx.browser.browscap:
+        class: '%sfynx.browser.browscap.factory.class%'
+        arguments:
+            - '@sfynx.browser.browscap.lib'
+            - '@request_stack'
+
+    #
+    # mobiledetect Configuration
+    #
+    sfynx.browser.mobiledetect.lib:
+        class: '%sfynx.browser.mobiledetect.lib.class%'
+
+    sfynx.browser.mobiledetect:
+        class: '%sfynx.browser.mobiledetect.factory.class%'
+        arguments:
+            - '@sfynx.browser.mobiledetect.lib'
+            - '@request_stack'
+
+    #
+    # Kernel Request
+    #
+    sfynx.browser.cache_handler:
+        class: '%sfynx.browser.handler.cache.class%'
+        arguments:
+            - '@sfynx.browser.browscap.lib'
+            - '@sfynx.browser.browscap'
+        calls:
+            - [ setParams, [ '%sfynx.browser.handler.cache.params%' ] ]
+        tags:
+          - { name: 'kernel.event_listener', event: 'kernel.response', priority: 1 }
