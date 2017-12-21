@@ -44,7 +44,19 @@ class SfynxBrowserExtension extends Extension{
         $loaderYaml->load('services.yml');
         // we load config
         $configuration = new Configuration();
-        $config  = $this->processConfiguration($configuration, $config);        
+        $config  = $this->processConfiguration($configuration, $config);
+
+        /**
+         * Cookies config parameter
+         */
+        if (isset($config['cookies'])) {
+            if (isset($config['cookies']['date_expire'])) {
+                $container->setParameter('sfynx.browser.cookies.date_expire', $config['cookies']['date_expire']);
+            }
+            if (isset($config['cookies']['date_interval'])) {
+                $container->setParameter('sfynx.browser.cookies.date_interval',$config['cookies']['date_interval']);
+            }
+        }
 
         /**
          * Browscap config parameter

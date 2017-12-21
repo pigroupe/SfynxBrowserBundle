@@ -6,19 +6,14 @@ All available configuration options are listed below with their default values.
 #
 # SfynxBrowserBundle configuration
 #  
-sfynx_browser:            
+sfynx_browser:
+    cookies:
+        date_expire: true
+        date_interval:  %cookie_lifetime% # 604800 PT4H  604800
     browscap:
-        remote_ini_url:       http://browscap.org/stream?q=Full_PHP_BrowsCapINI
-        remote_ver_url:       http://browscap.org/version
-        cache_dir:            "%kernel.root_dir%/cachesfynx/browscap" # null : If null, use your application cache directory
-        timeout:              5
+        cache_dir:            "%sfynx_cache_dir%/browscap" # null : If null, use your application cache directory
         update_interval:      432000
         error_interval:       7200
-        do_auto_update:       true
-        update_method:        'cURL' # Supported methods: 'URL-wrapper','socket','cURL' and 'local'.
-        local_file:           null # Only if used
-        cache_filename:       'cache.php'
-        ini_filename:         'browscap.ini'
-        lowercase:            false # You need to rebuild the cache if this option is changed
-        silent:               false   
+        timeout:              10000
+        silent:               false
 ```

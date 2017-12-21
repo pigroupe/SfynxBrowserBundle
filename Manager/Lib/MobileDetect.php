@@ -22,7 +22,7 @@
  *
  * @version     2.8.3
  */
-namespace Sfynx\BrowserBundle\Lib;
+namespace Sfynx\BrowserBundle\Manager\Lib;
 
 class MobileDetect
 {
