@@ -16,6 +16,7 @@ services:
     #
     sfynx.browser.browscap.lib:
         class: '%sfynx.browser.browscap.lib.class%'
+        public : true
         arguments:
             - '%sfynx.browser.browscap.cache_dir%'
         properties:
@@ -26,6 +27,7 @@ services:
 
     sfynx.browser.browscap:
         class: '%sfynx.browser.browscap.factory.class%'
+        public : true
         arguments:
             - '@sfynx.browser.browscap.lib'
             - '@request_stack'
@@ -35,9 +37,11 @@ services:
     #
     sfynx.browser.mobiledetect.lib:
         class: '%sfynx.browser.mobiledetect.lib.class%'
+        public : true
 
     sfynx.browser.mobiledetect:
         class: '%sfynx.browser.mobiledetect.factory.class%'
+        public : true
         arguments:
             - '@sfynx.browser.mobiledetect.lib'
             - '@request_stack'
@@ -47,6 +51,7 @@ services:
     #
     sfynx.browser.cache_handler:
         class: '%sfynx.browser.handler.cache.class%'
+        public : true
         arguments:
             - '@sfynx.browser.browscap.lib'
             - '@sfynx.browser.browscap'
